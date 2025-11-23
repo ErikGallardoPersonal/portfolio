@@ -1,5 +1,6 @@
 from turtle import Turtle
 from enum import IntEnum
+from constants import SNAKE_SEGMENT_SIZE_PIX
 
 class TurnDegrees(IntEnum):
     UP = 90
@@ -8,38 +9,38 @@ class TurnDegrees(IntEnum):
     RIGHT = 0
 
 class Snake:
-    def __init__(self) -> None:
+    def __init__(self, segment_size: int = SNAKE_SEGMENT_SIZE_PIX) -> None:
+        self._segment_size = segment_size
         self._segments: list[Turtle] = []
-        self._segment_size = 20
         self._init_segments()
-        self._head = self._segments[0]
+        self.head = self._segments[0]
 
     def move(self):
         self._segment_propagation()
-        self._head.forward(self._segment_size)
+        self.head.forward(self._segment_size)
 
     def turn_up(self):
-        if self._head.heading() == TurnDegrees.DOWN:
+        if self.head.heading() == TurnDegrees.DOWN:
             return
-        self._head.setheading(TurnDegrees.UP)
+        self.head.setheading(TurnDegrees.UP)
         self.move()
 
     def turn_down(self):
-        if self._head.heading() == TurnDegrees.UP:
+        if self.head.heading() == TurnDegrees.UP:
             return
-        self._head.setheading(TurnDegrees.DOWN)
+        self.head.setheading(TurnDegrees.DOWN)
         self.move()
 
     def turn_left(self):
-        if self._head.heading() == TurnDegrees.RIGHT:
+        if self.head.heading() == TurnDegrees.RIGHT:
             return
-        self._head.setheading(TurnDegrees.LEFT)
+        self.head.setheading(TurnDegrees.LEFT)
         self.move()
 
     def turn_right(self):
-        if self._head.heading() == TurnDegrees.LEFT:
+        if self.head.heading() == TurnDegrees.LEFT:
             return
-        self._head.setheading(TurnDegrees.RIGHT)
+        self.head.setheading(TurnDegrees.RIGHT)
         self.move()
 
     def _init_segments(self):
@@ -48,6 +49,8 @@ class Snake:
             snake_segment = Turtle(shape="square")
             snake_segment.penup()
             snake_segment.color("white")
+            segment_size = SNAKE_SEGMENT_SIZE_PIX/20
+            snake_segment.shapesize(stretch_len=segment_size, stretch_wid=segment_size)
             snake_segment.goto(segment_position[0], segment_position[1])
             self._segments.append(snake_segment)
             segment_position[0] -= self._segment_size
