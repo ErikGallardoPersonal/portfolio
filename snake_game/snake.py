@@ -1,10 +1,46 @@
 from turtle import Turtle
+from enum import IntEnum
+
+class TurnDegrees(IntEnum):
+    UP = 90
+    DOWN = 270
+    LEFT = 180
+    RIGHT = 0
 
 class Snake:
     def __init__(self) -> None:
         self._segments: list[Turtle] = []
         self._segment_size = 20
         self._init_segments()
+        self._head = self._segments[0]
+
+    def move(self):
+        self._segment_propagation()
+        self._head.forward(self._segment_size)
+
+    def turn_up(self):
+        if self._head.heading() == TurnDegrees.DOWN:
+            return
+        self._head.setheading(TurnDegrees.UP)
+        self.move()
+
+    def turn_down(self):
+        if self._head.heading() == TurnDegrees.UP:
+            return
+        self._head.setheading(TurnDegrees.DOWN)
+        self.move()
+
+    def turn_left(self):
+        if self._head.heading() == TurnDegrees.RIGHT:
+            return
+        self._head.setheading(TurnDegrees.LEFT)
+        self.move()
+
+    def turn_right(self):
+        if self._head.heading() == TurnDegrees.LEFT:
+            return
+        self._head.setheading(TurnDegrees.RIGHT)
+        self.move()
 
     def _init_segments(self):
         segment_position = [0, 0]
@@ -21,7 +57,3 @@ class Snake:
             current_segment = self._segments[seg_idx]
             next_segment = self._segments[seg_idx-1]
             current_segment.goto(next_segment.pos())
-
-    def move(self):
-        self._segment_propagation()
-        self._segments[0].forward(self._segment_size)
