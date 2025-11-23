@@ -16,11 +16,12 @@ class Snake:
             self._segments.append(snake_segment)
             segment_position[0] -= self._segment_size
 
-    def move(self):
-        next_segment_pos_pix = [0, 0]
+    def _segment_propagation(self):
         for seg_idx in range(len(self._segments)-1, 0, -1):
             current_segment = self._segments[seg_idx]
             next_segment = self._segments[seg_idx-1]
-            next_segment_pos_pix = [*next_segment.pos()]
-            current_segment.goto(next_segment_pos_pix[0], next_segment_pos_pix[1])
+            current_segment.goto(next_segment.pos())
+
+    def move(self):
+        self._segment_propagation()
         self._segments[0].forward(self._segment_size)
