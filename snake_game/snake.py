@@ -14,7 +14,7 @@ class Snake:
         self._segment_size = segment_size
         self._segments: list[Turtle] = []
         self._init_segments()
-        self.head = self._segments[0]
+        self.head = self._segments[-1]
 
     def move(self):
         self._segment_propagation()
@@ -45,19 +45,20 @@ class Snake:
         self.head.setheading(TurnDegrees.RIGHT)
 
     def _init_segments(self):
-        segment_position = [0, 0]
-        segment_size = SNAKE_SEGMENT_SIZE_PIX/20
-        for _ in range(3):
-            snake_segment = self._create_segment(seg_pos_x_pix=segment_position[0],
-                                                 seg_pos_y_pix=segment_position[1],
-                                                 segment_size_ratio=segment_size)
+        INITIAL_SEGMENTS = 3
+        seg_x_pix = (INITIAL_SEGMENTS - 1) * self._segment_size
+        seg_y_pix = 0
+        for _ in range(INITIAL_SEGMENTS):
+            snake_segment = self._create_segment(seg_pos_x_pix=seg_x_pix,
+                                                 seg_pos_y_pix=seg_y_pix,
+                                                 segment_size_ratio=self._segment_size/20)
             self._segments.append(snake_segment)
-            segment_position[0] -= self._segment_size
+            seg_x_pix += self._segment_size
 
     def _segment_propagation(self):
-        for seg_idx in range(len(self._segments)-1, 0, -1):
+        for seg_idx in range(0, len(self._segments)-1):
             current_segment = self._segments[seg_idx]
-            next_segment = self._segments[seg_idx-1]
+            next_segment = self._segments[seg_idx+1]
             current_segment.goto(next_segment.pos())
 
     @staticmethod
