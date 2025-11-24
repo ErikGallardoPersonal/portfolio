@@ -5,4 +5,4 @@ FOOD_SIZE_PIX = 10
 
 # Score
 ALIGNMENT = "center"
-FONT = ('Arial', 14, 'normal')
+FONT = ('Arial', 12, 'normal')

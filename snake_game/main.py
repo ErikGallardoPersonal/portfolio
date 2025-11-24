@@ -2,16 +2,19 @@ from turtle import Screen
 from snake import Snake
 from food import Food
 from scoreboard import Scoreboard
+from grid import Grid
 from constants import WINDOW_WIDTH_PIX, WINDOW_HEIGHT_PIX, FOOD_SIZE_PIX, SNAKE_SEGMENT_SIZE_PIX
 from time import sleep
 
 def main():
     screen = Screen()
-    screen.setup(width=WINDOW_WIDTH_PIX, height=WINDOW_HEIGHT_PIX)
+    screen.setup(width=WINDOW_WIDTH_PIX+SNAKE_SEGMENT_SIZE_PIX, height=WINDOW_HEIGHT_PIX+SNAKE_SEGMENT_SIZE_PIX)
+    screen.cv._rootwindow.resizable(False, False) # Disable Window Resize
     screen.bgcolor("black")
     screen.title("Ouroboros")
     screen.tracer(0)
 
+    grid = Grid()
     snake = Snake()
     food = Food()
     score = Scoreboard()
@@ -32,7 +35,7 @@ def main():
         if snake.head.distance(food) < SNAKE_SEGMENT_SIZE_PIX//2 + FOOD_SIZE_PIX//2:
             food.reposition()
             score.update_score()
-        
+
     screen.exitonclick()
 
 if __name__ == "__main__":

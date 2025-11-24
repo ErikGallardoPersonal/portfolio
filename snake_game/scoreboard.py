@@ -9,7 +9,7 @@ class Scoreboard(Turtle):
         self.penup()
         self.color("white")
         self.speed(0)
-        self.goto(0, WINDOW_HEIGHT_PIX//2 - SNAKE_SEGMENT_SIZE_PIX)
+        self.goto(0, WINDOW_HEIGHT_PIX//2 - SNAKE_SEGMENT_SIZE_PIX//2)
         self.update_score()
     
     def update_score(self):
