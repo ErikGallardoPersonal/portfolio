@@ -15,5 +15,5 @@ class Food(Turtle):
         x_limit_norm = (WINDOW_WIDTH_PIX // 2) // SNAKE_SEGMENT_SIZE_PIX
         y_limit_norm = (WINDOW_HEIGHT_PIX // 2) // SNAKE_SEGMENT_SIZE_PIX
         x_position = randint(-x_limit_norm + 1, x_limit_norm - 1) * SNAKE_SEGMENT_SIZE_PIX
-        y_position = randint(-y_limit_norm + 1, y_limit_norm - 1) * SNAKE_SEGMENT_SIZE_PIX
+        y_position = randint(-y_limit_norm + 1, y_limit_norm - 2) * SNAKE_SEGMENT_SIZE_PIX
         self.goto(x_position, y_position)

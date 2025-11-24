@@ -1,6 +1,7 @@
 from turtle import Screen
 from snake import Snake
 from food import Food
+from scoreboard import Scoreboard
 from constants import WINDOW_WIDTH_PIX, WINDOW_HEIGHT_PIX, FOOD_SIZE_PIX, SNAKE_SEGMENT_SIZE_PIX
 from time import sleep
 
@@ -13,6 +14,7 @@ def main():
 
     snake = Snake()
     food = Food()
+    score = Scoreboard()
 
     screen.listen()
     screen.onkey(fun= snake.turn_up, key="Up")
@@ -29,6 +31,7 @@ def main():
         # Detect collision with food
         if snake.head.distance(food) < SNAKE_SEGMENT_SIZE_PIX//2 + FOOD_SIZE_PIX//2:
             food.reposition()
+            score.update_score()
         
     screen.exitonclick()
 
