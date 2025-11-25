@@ -1,10 +1,12 @@
 from turtle import Turtle
-from constants import WINDOW_WIDTH_PIX, WINDOW_HEIGHT_PIX
+
 class Grid(Turtle):
-    def __init__(self) -> None:
+    def __init__(self, top_right_corner: tuple) -> None:
         super().__init__(visible = False)
         self.speed(0)
-        self._top_right_corner = (WINDOW_WIDTH_PIX//2, WINDOW_HEIGHT_PIX//2)
+        self._top_right_corner = top_right_corner
+
+    def frame_scene(self):
         self._draw_contour()
         self._show_score()
 
@@ -12,9 +14,9 @@ class Grid(Turtle):
         self.penup()
         self.color("black")
         self.pensize(17)
-        self.goto(-WINDOW_WIDTH_PIX // 4, WINDOW_HEIGHT_PIX//2)
+        self.goto(-self._top_right_corner[0] // 2, self._top_right_corner[1])
         self.pendown()
-        self.forward(WINDOW_WIDTH_PIX // 2)
+        self.forward(self._top_right_corner[0])
     
     def _draw_contour(self) -> None:
         self.penup()
