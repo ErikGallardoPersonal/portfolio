@@ -12,42 +12,42 @@ class TurnDegrees(IntEnum):
 class Snake:
     def __init__(self, segment_size: int = SNAKE_SEGMENT_SIZE_PIX) -> None:
         self._segment_size = segment_size
-        self._segments: list[Turtle] = []
+        self.segments: list[Turtle] = []
         self._init_segments()
     
     @property
-    def head(self):
-        return self._segments[-1]
+    def head(self) -> Turtle:
+        return self.segments[-1]
 
-    def move(self):
+    def move(self) -> None:
         self._segment_propagation()
         self.head.forward(self._segment_size)
 
-    def turn_up(self):
+    def turn_up(self) -> None:
         if not self._is_valid_movement(current_direction=self.head.heading(),
                                         desired_direction=TurnDegrees.UP):
             return
         self.head.setheading(TurnDegrees.UP)
 
-    def turn_down(self):
+    def turn_down(self) -> None:
         if not self._is_valid_movement(current_direction=self.head.heading(),
                                         desired_direction=TurnDegrees.DOWN):
             return
         self.head.setheading(TurnDegrees.DOWN)
 
-    def turn_left(self):
+    def turn_left(self) -> None:
         if not self._is_valid_movement(current_direction=self.head.heading(),
                                         desired_direction=TurnDegrees.LEFT):
             return
         self.head.setheading(TurnDegrees.LEFT)
 
-    def turn_right(self):
+    def turn_right(self) -> None:
         if not self._is_valid_movement(current_direction=self.head.heading(),
                                         desired_direction=TurnDegrees.RIGHT):
             return
         self.head.setheading(TurnDegrees.RIGHT)
 
-    def extend(self):
+    def extend(self) -> None:
         self.head.forward(self._segment_size)
         head_position = self.head.pos()
         head_heading = self.head.heading()
@@ -56,9 +56,9 @@ class Snake:
                                                 seg_pos_y_pix=head_position[1],
                                                 direction=head_heading,
                                                 segment_size_ratio=self._segment_size/20)
-        self._segments.append(snake_segment)
+        self.segments.append(snake_segment)
 
-    def _init_segments(self):
+    def _init_segments(self) -> None:
         INITIAL_SEGMENTS = 3
         seg_x_pix = (INITIAL_SEGMENTS - 1) * self._segment_size
         seg_y_pix = 0
@@ -67,17 +67,17 @@ class Snake:
                                                  seg_pos_y_pix=seg_y_pix,
                                                  direction=TurnDegrees.RIGHT,
                                                  segment_size_ratio=self._segment_size/20)
-            self._segments.append(snake_segment)
+            self.segments.append(snake_segment)
             seg_x_pix += self._segment_size
 
-    def _segment_propagation(self):
-        for seg_idx in range(0, len(self._segments)-1):
-            current_segment = self._segments[seg_idx]
-            next_segment = self._segments[seg_idx+1]
+    def _segment_propagation(self) -> None:
+        for seg_idx in range(0, len(self.segments)-1):
+            current_segment = self.segments[seg_idx]
+            next_segment = self.segments[seg_idx+1]
             current_segment.goto(next_segment.pos())
 
     @staticmethod
-    def _create_segment(seg_pos_x_pix: int, seg_pos_y_pix: int, direction: TurnDegrees, segment_size_ratio: int):
+    def _create_segment(seg_pos_x_pix: int, seg_pos_y_pix: int, direction: TurnDegrees, segment_size_ratio: int) -> Turtle:
         snake_segment = Turtle(shape="square")
         snake_segment.penup()
         snake_segment.color("white")

@@ -44,6 +44,12 @@ def main():
             (snake.head.ycor() > WINDOW_HEIGHT_PIX//2 - SNAKE_SEGMENT_SIZE_PIX //2):
             is_game_running = False
             score.game_over()
+
+        # Detect collision with tail
+        if any([True if snake.head.distance(current_segment) < SNAKE_SEGMENT_SIZE_PIX else False for current_segment in snake.segments[:-1]]):
+            is_game_running = False
+            score.game_over()
+        
     screen.exitonclick()
 
 if __name__ == "__main__":

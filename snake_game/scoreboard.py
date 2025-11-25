@@ -12,11 +12,11 @@ class Scoreboard(Turtle):
         self.goto(0, WINDOW_HEIGHT_PIX//2 - SNAKE_SEGMENT_SIZE_PIX//2)
         self.update_score()
     
-    def update_score(self):
+    def update_score(self) -> None:
         self.current_score += 1
         self.clear()
         self.write(f"Score = {self.current_score}", align=ALIGNMENT, font=FONT)
 
-    def game_over(self):
+    def game_over(self) -> None:
         self.goto(0, 0)
         self.write(f"GAME OVER!!!", align=ALIGNMENT, font=FONT)

@@ -8,7 +8,7 @@ class Grid(Turtle):
         self._draw_contour()
         self._show_score()
 
-    def _show_score(self):
+    def _show_score(self) -> None:
         self.penup()
         self.color("black")
         self.pensize(17)
@@ -16,7 +16,7 @@ class Grid(Turtle):
         self.pendown()
         self.forward(WINDOW_WIDTH_PIX // 2)
     
-    def _draw_contour(self):
+    def _draw_contour(self) -> None:
         self.penup()
         self.color("white")
         self.pensize(17)
