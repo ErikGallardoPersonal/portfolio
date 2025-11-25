@@ -12,9 +12,10 @@ class TurnDegrees(IntEnum):
 class Snake:
     def __init__(self) -> None:
         self.segment_size_pix = GRID_SIZE_PIX
-        self._collision_margin = 3
+        self._collision_margin = 2
         self._segments: list[Turtle] = []
         self._init_segments()
+        self.can_turn = True
     
     @property
     def head(self) -> Turtle:
@@ -23,30 +24,28 @@ class Snake:
     def move(self) -> None:
         self._segment_propagation()
         self.head.forward(self.segment_size_pix)
+        self.can_turn = True
+
+    def _turn(self, desired_direction: TurnDegrees):
+        if not self.can_turn:
+            return
+        if not self._is_valid_movement(current_direction=self.head.heading(),
+                                        desired_direction=desired_direction):
+            return
+        self.head.setheading(desired_direction)
+        self.can_turn = False
 
     def turn_up(self) -> None:
-        if not self._is_valid_movement(current_direction=self.head.heading(),
-                                        desired_direction=TurnDegrees.UP):
-            return
-        self.head.setheading(TurnDegrees.UP)
+        self._turn(TurnDegrees.UP)
 
     def turn_down(self) -> None:
-        if not self._is_valid_movement(current_direction=self.head.heading(),
-                                        desired_direction=TurnDegrees.DOWN):
-            return
-        self.head.setheading(TurnDegrees.DOWN)
+        self._turn(TurnDegrees.DOWN)
 
     def turn_left(self) -> None:
-        if not self._is_valid_movement(current_direction=self.head.heading(),
-                                        desired_direction=TurnDegrees.LEFT):
-            return
-        self.head.setheading(TurnDegrees.LEFT)
+        self._turn(TurnDegrees.LEFT)
 
     def turn_right(self) -> None:
-        if not self._is_valid_movement(current_direction=self.head.heading(),
-                                        desired_direction=TurnDegrees.RIGHT):
-            return
-        self.head.setheading(TurnDegrees.RIGHT)
+        self._turn(TurnDegrees.RIGHT)
 
     def ate(self, food: Turtle) -> bool:
         return self.head.distance(food) < self.segment_size_pix//2 + GRID_SIZE_PIX//2 - self._collision_margin

@@ -1,10 +1,10 @@
 from turtle import Screen
-from time import sleep
 from snake import Snake
 from food import Food
 from grid import Grid
 from scoreboard import Scoreboard
 from constants import WINDOW_WIDTH_PIX, WINDOW_HEIGHT_PIX, GRID_SIZE_PIX
+from time import time, sleep
 
 class Game:
     def __init__(self) -> None:
@@ -15,20 +15,31 @@ class Game:
         self._bind_keys()
         self._is_running = True
         self._is_paused = False
-        
+        self.game_speed = 0.1
+
+    def _render(self):
+        self._screen.update()
+
+    def _update(self):
+        self._snake.move()
+        self.check_food_collision()
+        self.check_wall_collision()
+        self.check_tail_collision()
 
     def run(self) -> None:
         self._scoreboard.position_score(self._screen.window_height() // 2,  self._grid_size)
         self._food.reposition(self._screen.window_width() // 2, self._screen.window_height() // 2, self._grid_size)
+        last_update = time()
+        self.update_interval = 1 / 5
         while self._is_running:
-            self._screen.update()
-            sleep(0.1)
-            if self._is_paused:
-                continue
-            self._snake.move()
-            self.check_food_collision()
-            self.check_wall_collision()
-            self.check_tail_collision()
+            now = time()
+            delta = now - last_update
+            if delta >= self.update_interval:
+                if not self._is_paused:
+                    self._update()
+                    last_update = now
+            self._render()
+            sleep(0.001)
         self._screen.exitonclick()
 
     def _setup_screen(self) -> None:
@@ -71,6 +82,7 @@ class Game:
         self._food.reposition(self._screen.window_width() // 2, self._screen.window_height()//2, self._grid_size)
         self._scoreboard.update_score()
         self._snake.extend()
+        self.update_interval = max(0.05, self.update_interval * 0.95)
 
     def check_wall_collision(self):
         if not self._snake.collided_with_wall(self._screen.window_width()//2, self._screen.window_height()//2):
