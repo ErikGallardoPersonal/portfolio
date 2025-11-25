@@ -35,6 +35,7 @@ def main():
         if snake.head.distance(food) < SNAKE_SEGMENT_SIZE_PIX//2 + FOOD_SIZE_PIX//2:
             food.reposition()
             score.update_score()
+            snake.extend()
             
         # Detect collision with frame
         if  (snake.head.xcor() < -WINDOW_WIDTH_PIX//2 + SNAKE_SEGMENT_SIZE_PIX //2) or\

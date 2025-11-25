@@ -14,7 +14,10 @@ class Snake:
         self._segment_size = segment_size
         self._segments: list[Turtle] = []
         self._init_segments()
-        self.head = self._segments[-1]
+    
+    @property
+    def head(self):
+        return self._segments[-1]
 
     def move(self):
         self._segment_propagation()
@@ -44,6 +47,17 @@ class Snake:
             return
         self.head.setheading(TurnDegrees.RIGHT)
 
+    def extend(self):
+        self.head.forward(self._segment_size)
+        head_position = self.head.pos()
+        head_heading = self.head.heading()
+        self.head.backward(self._segment_size)
+        snake_segment = self._create_segment(seg_pos_x_pix=head_position[0],
+                                                seg_pos_y_pix=head_position[1],
+                                                direction=head_heading,
+                                                segment_size_ratio=self._segment_size/20)
+        self._segments.append(snake_segment)
+
     def _init_segments(self):
         INITIAL_SEGMENTS = 3
         seg_x_pix = (INITIAL_SEGMENTS - 1) * self._segment_size
@@ -51,6 +65,7 @@ class Snake:
         for _ in range(INITIAL_SEGMENTS):
             snake_segment = self._create_segment(seg_pos_x_pix=seg_x_pix,
                                                  seg_pos_y_pix=seg_y_pix,
+                                                 direction=TurnDegrees.RIGHT,
                                                  segment_size_ratio=self._segment_size/20)
             self._segments.append(snake_segment)
             seg_x_pix += self._segment_size
@@ -62,10 +77,11 @@ class Snake:
             current_segment.goto(next_segment.pos())
 
     @staticmethod
-    def _create_segment(seg_pos_x_pix: int, seg_pos_y_pix: int, segment_size_ratio: int):
+    def _create_segment(seg_pos_x_pix: int, seg_pos_y_pix: int, direction: TurnDegrees, segment_size_ratio: int):
         snake_segment = Turtle(shape="square")
         snake_segment.penup()
         snake_segment.color("white")
+        snake_segment.setheading(direction)
         snake_segment.shapesize(stretch_len=segment_size_ratio, stretch_wid=segment_size_ratio)
         snake_segment.goto(seg_pos_x_pix, seg_pos_y_pix)
         return snake_segment
