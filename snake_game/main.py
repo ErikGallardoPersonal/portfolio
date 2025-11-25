@@ -35,7 +35,14 @@ def main():
         if snake.head.distance(food) < SNAKE_SEGMENT_SIZE_PIX//2 + FOOD_SIZE_PIX//2:
             food.reposition()
             score.update_score()
-
+            
+        # Detect collision with frame
+        if  (snake.head.xcor() < -WINDOW_WIDTH_PIX//2 + SNAKE_SEGMENT_SIZE_PIX //2) or\
+            (snake.head.xcor() > WINDOW_WIDTH_PIX//2 - SNAKE_SEGMENT_SIZE_PIX //2) or\
+            (snake.head.ycor() < -WINDOW_HEIGHT_PIX//2 + SNAKE_SEGMENT_SIZE_PIX //2) or\
+            (snake.head.ycor() > WINDOW_HEIGHT_PIX//2 - SNAKE_SEGMENT_SIZE_PIX //2):
+            is_game_running = False
+            score.game_over()
     screen.exitonclick()
 
 if __name__ == "__main__":
