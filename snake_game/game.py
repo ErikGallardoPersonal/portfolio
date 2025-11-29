@@ -1,21 +1,23 @@
+from time import time, sleep
 from turtle import Screen
+from constants import WINDOW_WIDTH_PIX, WINDOW_HEIGHT_PIX, GRID_SIZE_PIX
 from snake import Snake
 from food import Food
 from grid import Grid
 from scoreboard import Scoreboard
-from constants import WINDOW_WIDTH_PIX, WINDOW_HEIGHT_PIX, GRID_SIZE_PIX
-from time import time, sleep
+
 
 class Game:
     def __init__(self) -> None:
         self._grid_size = GRID_SIZE_PIX
+        self.grid_positions: list[tuple[int, int]] = []
         self._setup_screen()
         self._create_elements()
         self._draw_frame()
         self._bind_keys()
         self._is_running = True
         self._is_paused = False
-        self.game_speed = 0.1
+        self.update_interval: float = 1 / 5
 
     def _render(self):
         self._screen.update()
@@ -27,10 +29,10 @@ class Game:
         self.check_tail_collision()
 
     def run(self) -> None:
-        self._scoreboard.position_score(self._screen.window_height() // 2,  self._grid_size)
-        self._food.reposition(self._screen.window_width() // 2, self._screen.window_height() // 2, self._grid_size)
+        self._scoreboard.position_score(
+            self._screen.window_height() // 2,  self._grid_size)
+        self._food.reposition(self.grid_positions, self._snake.segments)
         last_update = time()
-        self.update_interval = 1 / 5
         while self._is_running:
             now = time()
             delta = now - last_update
@@ -58,7 +60,15 @@ class Game:
         grid = Grid((WINDOW_WIDTH_PIX//2, WINDOW_HEIGHT_PIX//2))
         grid.frame_scene()
         del grid
-    
+        # Generate all grid coordinates
+        for x in range(-self._screen.window_width()//2 + self._grid_size // 2,
+                       self._screen.window_width()//2 - self._grid_size,
+                       self._grid_size):
+            for y in range(-self._screen.window_height()//2 + self._grid_size // 2,
+                           self._screen.window_height()//2 - self._grid_size,
+                           self._grid_size):
+                self.grid_positions.append((x, y))
+
     def _create_elements(self) -> None:
         self._snake = Snake()
         self._food = Food()
@@ -79,10 +89,10 @@ class Game:
     def check_food_collision(self) -> None:
         if not self._snake.ate(self._food):
             return
-        self._food.reposition(self._screen.window_width() // 2, self._screen.window_height()//2, self._grid_size)
+        self._food.reposition(self.grid_positions, self._snake.segments)
         self._scoreboard.update_score()
         self._snake.extend()
-        self.update_interval = max(0.05, self.update_interval * 0.95)
+        self.update_interval = max(0.055, self.update_interval * 0.95)
 
     def check_wall_collision(self):
         if not self._snake.collided_with_wall(self._screen.window_width()//2, self._screen.window_height()//2):

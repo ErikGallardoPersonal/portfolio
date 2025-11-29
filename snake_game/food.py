@@ -1,5 +1,6 @@
 from turtle import Turtle
-from random import randint
+from random import choice
+
 
 class Food(Turtle):
     def __init__(self) -> None:
@@ -9,13 +10,11 @@ class Food(Turtle):
         self.color("red")
         self.speed(0)
 
-    def reposition(self, x_limit_pix: int, y_limit_pix: int, grid_size: int) -> None:
-        self.goto(self._get_random_pos(x_limit_pix, y_limit_pix, grid_size))
-
-    @staticmethod
-    def _get_random_pos(x_limit_pix: int, y_limit_pix: int, grid_size: int) -> tuple[int]:
-        x_limit_norm = (x_limit_pix // 2) // grid_size
-        y_limit_norm = (y_limit_pix // 2) // grid_size
-        x_position = randint(-x_limit_norm + 1, x_limit_norm - 1) * grid_size
-        y_position = randint(-y_limit_norm + 1, y_limit_norm - 2) * grid_size
-        return (x_position, y_position)
+    def reposition(self, grid_positions: list[int], snake_segments: list[Turtle]) -> None:
+        snake_positions = {(seg.xcor(), seg.ycor()) for seg in snake_segments}
+        free_positions = [
+            pos for pos in grid_positions if pos not in snake_positions]
+        if not free_positions:
+            return
+        x, y = choice(free_positions)
+        self.goto(x, y)
