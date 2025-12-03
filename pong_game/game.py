@@ -8,7 +8,7 @@ class Game:
         self._minimum_element_size_pix = 20
         self._window = Window()
         self._screen_width, self._screen_height = self._window.screensize()
-        self._ball = Ball(self._minimum_element_size_pix)
+        self._ball = Ball(self._minimum_element_size_pix, wall_limit=self._screen_height//2)
         self._initialize_ball_movement()
         self._player1: Paddle
         self._player2: Paddle
@@ -52,7 +52,9 @@ class Game:
         self._window._screen.update()
 
     def _update(self):
-        self._ball.bounce_wall(self._screen_height//2)
+        self._ball.collision_with_wall()
+        self._ball.collision_with_paddle(self._player1)
+        self._ball.collision_with_paddle(self._player2)
         self._ball.move()
 
     def toggle_pause(self) -> None:
