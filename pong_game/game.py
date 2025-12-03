@@ -15,7 +15,7 @@ class Game:
         self._create_players()
         self._bind_keys()
         self._is_running: bool = True
-        self.update_interval: float = 1 / 5
+        self.update_interval: float = 1 / 60
         self._is_paused = False
 
     def run(self) -> None:
@@ -52,6 +52,7 @@ class Game:
         self._window._screen.update()
 
     def _update(self):
+        self._ball.bounce_wall(self._screen_height//2)
         self._ball.move()
 
     def toggle_pause(self) -> None:
