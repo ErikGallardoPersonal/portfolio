@@ -1,3 +1,4 @@
+from math import sqrt
 from random import randint, choice
 from game_object import GameObject, Shapes
 
@@ -11,9 +12,13 @@ class Ball(GameObject):
     def start_ball(self) -> None:
         self._start_object()
         signs = [1, -1]
-        velocity = 10
+        velocity: float = 10
         self.x_velocity = choice(signs) * velocity
         self.y_velocity = choice(signs) * randint(1, velocity)
+
+    def increase_speed(self):
+        self.x_velocity *= 1.05
+        self.y_velocity *= 1.05
 
     def move(self):
         x, y = self.pos()
