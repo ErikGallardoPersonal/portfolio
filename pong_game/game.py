@@ -2,6 +2,7 @@ from time import time, sleep
 from window import Window
 from ball import Ball
 from paddle import Paddle
+from scoreboard import Scoreboard
 
 class Game:
     def __init__(self) -> None:
@@ -13,6 +14,7 @@ class Game:
         self._player1: Paddle
         self._player2: Paddle
         self._create_players()
+        self._scoreboard = Scoreboard(self._screen_height // 2 - 50, 100)
         self._bind_keys()
         self._is_running: bool = True
         self.update_interval: float = 1 / 60
@@ -61,6 +63,8 @@ class Game:
             has_scored = self._ball.has_scored(player.xcor())
             if not has_scored:
                 continue
+            self._scoreboard.left_scored() if player is self._player2 else self._scoreboard.right_scored()
+            self._scoreboard.update_scores()
             self._ball.start_ball()
             for p in players:
                 p.start_paddle()
