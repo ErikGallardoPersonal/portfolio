@@ -59,7 +59,6 @@ class Game:
         for player in players:
             has_collision_paddle = self._ball.has_collision_with_paddle(player.pos())
             if has_collision_paddle:
-                self._ball.increase_speed()
                 continue
             has_scored = self._ball.has_scored(player.xcor())
             if not has_scored:

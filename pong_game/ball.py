@@ -16,7 +16,7 @@ class Ball(GameObject):
         self.x_velocity = choice(signs) * velocity
         self.y_velocity = choice(signs) * randint(1, velocity)
 
-    def increase_speed(self):
+    def _increase_speed(self):
         self.x_velocity *= 1.05
         self.y_velocity *= 1.05
 
@@ -36,6 +36,7 @@ class Ball(GameObject):
         ball_x = abs(self.xcor())
         x_limit = paddle_x_limit - 2 * paddle_width
         if ball_x >= x_limit:
+            self._increase_speed()
             self._bounce_x(x_limit * original_sign)
             return True
         return False
