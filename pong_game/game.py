@@ -31,11 +31,11 @@ class Game:
             sleep(0.001)
         self._window._screen.exitonclick()
 
-    def _initialize_ball_movement(self):
+    def _initialize_ball_movement(self) -> None:
         new_heading = self._ball.towards(self._screen_width//2, self._screen_height//2)
         self._ball.setheading(new_heading)
 
-    def _create_players(self):
+    def _create_players(self) -> None:
         half_width = self._screen_width // 2
         self._player1 = Paddle(self._minimum_element_size_pix, -half_width + self._minimum_element_size_pix)
         self._player2 = Paddle(self._minimum_element_size_pix, half_width - self._minimum_element_size_pix)
@@ -48,13 +48,23 @@ class Game:
         self._window._screen.onkey(self._player2.move_down, "Down")
         self._window._screen.onkey(self.toggle_pause, "p")
 
-    def _render(self):
+    def _render(self) -> None:
         self._window._screen.update()
 
-    def _update(self):
-        self._ball.collision_with_wall()
-        self._ball.collision_with_paddle(self._player1)
-        self._ball.collision_with_paddle(self._player2)
+    def _update(self) -> None:
+        players = [self._player1, self._player2]
+        self._ball.has_collision_with_wall()
+        for player in players:
+            has_collision_paddle = self._ball.has_collision_with_paddle(player.pos())
+            if has_collision_paddle:
+                continue
+            has_scored = self._ball.has_scored(player.xcor())
+            if not has_scored:
+                continue
+            self._ball.start_ball()
+            for p in players:
+                p.start_paddle()
+            break
         self._ball.move()
 
     def toggle_pause(self) -> None:
