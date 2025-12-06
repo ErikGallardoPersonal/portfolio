@@ -9,32 +9,41 @@ class Game:
         self._minimum_element_size_pix = 20
         self._window = Window()
         self._screen_width, self._screen_height = self._window.screensize()
-        self._scoreboard = Scoreboard(self._screen_height // 2 - 50, 100)
         self._player = Player(self._screen_height)
-        self.car_manager = CarManager()
-        self.car_manager.set_street(self._screen_width, self._screen_height, self._player.minimum_size)
-        self.car_manager.create_all_cars()
         self._bind_keys()
-        self._is_running: bool = True
+        self.car_manager = CarManager()
+        self._scoreboard = Scoreboard(0, self._screen_height // 2 - 20)
+        self.car_manager.set_street(self._screen_width, self._screen_height, self._player.minimum_size)
         self.update_interval: float = 1 / 60
-        self._is_paused = False
+        self._is_running: bool = False
+        self._is_paused: bool = False
+        self._quit_game: bool = False
 
     def run(self) -> None:
-        last_update = 0
-        while self._is_running:
-            now = time()
-            delta = now - last_update
-            if delta >= self.update_interval and not self._is_paused:
-                self._update()
-                last_update = now
+        self._start_game()
+        while not self._quit_game:
+            last_update = 0
+            while self._is_running:
+                if self._quit_game:
+                    break
+                now = time()
+                delta = now - last_update
+                if delta >= self.update_interval and not self._is_paused:
+                    self._update()
+                    last_update = now
+                self._render()
+                sleep(0.001)
+            print('sleeping')
+            sleep(0.1)
             self._render()
-            sleep(0.001)
-        self._window._screen.exitonclick()
+        self._window._screen.bye()
 
     def _bind_keys(self) -> None:
         self._window._screen.listen()
-        self._window._screen.onkey(self._player.move_up, "Up")
-        self._window._screen.onkey(self.toggle_pause, "p")
+        self._window._screen.onkey(self._start_game, "r")
+        self._window._screen.onkey(self._move_player, "Up")
+        self._window._screen.onkey(self._toggle_pause, "p")
+        self._window._screen.onkey(self._toggle_quit, "q")
 
     def _render(self) -> None:
         self._window._screen.update()
@@ -43,9 +52,28 @@ class Game:
         self.car_manager.move_cars()
         player_bbox = self._player.get_bounding_box()
         if self.car_manager.check_crashes(player_bbox):
-            print("End")
+            self._is_running = False
+            return
         self._player.finished()
-        self.car_manager.check_car_finished()
+        self.car_manager.check_cars_finished()
 
-    def toggle_pause(self) -> None:
+    def _toggle_pause(self) -> None:
+        if not self._is_running:
+            return
         self._is_paused = not self._is_paused
+
+    def _toggle_quit(self) -> None:
+        self._quit_game = not self._quit_game
+
+    def _start_game(self) -> None:
+        if self._is_running:
+            return
+        self._is_running = True
+        self._is_paused = False
+        self._player.move_to_start()
+        self.car_manager.reposition_all_cars()
+
+    def _move_player(self) -> None:
+        if not self._is_running:
+            return
+        self._player.move_up()

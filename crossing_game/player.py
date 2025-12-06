@@ -8,9 +8,8 @@ class Player(GameObject):
         self.start_line_y = -half_height + self.minimum_size
         self.finish_line_y = half_height
         self.setheading(90)
-        self._move_to_start()
 
-    def _move_to_start(self) -> None:
+    def move_to_start(self) -> None:
         self.goto(0, self.start_line_y)
 
     def move_up(self):
@@ -20,5 +19,5 @@ class Player(GameObject):
         player_bbox = self.get_bounding_box()
         is_finished = player_bbox.y_min >= self.finish_line_y
         if is_finished:
-            self._move_to_start()
+            self.move_to_start()
         return is_finished
