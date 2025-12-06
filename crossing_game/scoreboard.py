@@ -1,36 +1,32 @@
-from dataclasses import dataclass
 from turtle import Turtle
-
-@dataclass
-class PaddleScore:
-    score: int
-    x_cor: int
+from constants import FONT
 
 class Scoreboard(Turtle):
-    def __init__(self, y_cor: int, x_ofset: int) -> None:
+    def __init__(self, screen_width: float, screen_height: float) -> None:
         super().__init__(visible=False)
         self.current_score = -1
         self.penup()
-        self.color("white")
+        self.color("black")
         self.speed(0)
-        self.y_pos_pix = y_cor
-        self.left_score = PaddleScore(0, -x_ofset)
-        self.right_score = PaddleScore(0, x_ofset)
-        self._scores: list[PaddleScore] = [self.left_score, self.right_score]
-        self.update_scores()
+        self.screen_width = screen_width
+        self.screen_height = screen_height
+        self.player_score: int
+
+    def restart_player_score(self) -> None:
+        self.player_score = 0
     
-    def left_scored(self) -> None:
-        self.left_score.score += 1
+    def player_finished(self) -> None:
+        self.player_score += 1
 
-    def right_scored(self) -> None:
-        self.right_score.score += 1
-
-    def update_scores(self) -> None:
+    def update_score(self) -> None:
         self.clear()
-        for score in self._scores:
-            self.goto(score.x_cor, self.y_pos_pix)
-            self.write(score.score, align="center", font=('Courier', 30, 'normal'))
+        self.goto(-self.screen_width // 2, -self.screen_height // 2)
+        self.write(f"Level: {self.player_score}", align="left", font=FONT)
 
     def game_over(self) -> None:
         self.goto(0, 0)
-        self.write(f"GAME OVER!!!", align="center", font=('Courier', 30, 'normal'))
+        self.write(f"GAME OVER!!!", align="center", font=FONT)
+
+    def show_input_message(self):
+        self.goto(self.screen_width // 2, -self.screen_height // 2)
+        self.write(f"R - Restart, Q - Quit", align="right", font=FONT)

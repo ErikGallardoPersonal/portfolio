@@ -5,7 +5,7 @@ from car import Car
 class CarManager:
     def __init__(self) -> None:
         self._cache_colors = self._get_colors_list()
-        self._number_of_cars = 50
+        self._number_of_cars = 25
         self._cars: list[Car] = []
         self._lanes: int
         self._columns: int
@@ -71,6 +71,10 @@ class CarManager:
     @staticmethod
     def increment_car_velocities() -> None:
         Car.increment_velocity()
+
+    @staticmethod
+    def restart_car_velocities() -> None:
+        Car.restart_speed()
 
     @staticmethod
     def _get_random_color(colors: list[Color]) -> Color:

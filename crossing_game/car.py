@@ -1,9 +1,11 @@
+from tkinter import NO
 from constants import Shape, Color
 from game_object import GameObject
 
 class Car(GameObject):
-    car_velocity: int = 5
-    MOVE_INCREMENT: int = 10
+    START_CAR_SPEED: float = 5
+    car_velocity: float = START_CAR_SPEED
+    MOVE_INCREMENT: float = 1.05
 
     def __init__(self) -> None:
         super().__init__(Shape.SQUARE, Color.WHITE)
@@ -31,4 +33,8 @@ class Car(GameObject):
 
     @classmethod
     def increment_velocity(cls) -> None:
-        cls.car_velocity += cls.MOVE_INCREMENT
+        cls.car_velocity *= cls.MOVE_INCREMENT
+
+    @classmethod
+    def restart_speed(cls) -> None:
+        cls.car_velocity = cls.START_CAR_SPEED

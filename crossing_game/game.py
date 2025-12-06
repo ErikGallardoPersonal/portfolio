@@ -12,7 +12,7 @@ class Game:
         self._player = Player(self._screen_height)
         self._bind_keys()
         self.car_manager = CarManager()
-        self._scoreboard = Scoreboard(0, self._screen_height // 2 - 20)
+        self._scoreboard = Scoreboard(self._screen_width, self._screen_height)
         self.car_manager.set_street(self._screen_width, self._screen_height, self._player.minimum_size)
         self.update_interval: float = 1 / 60
         self._is_running: bool = False
@@ -33,7 +33,6 @@ class Game:
                     last_update = now
                 self._render()
                 sleep(0.001)
-            print('sleeping')
             sleep(0.1)
             self._render()
         self._window._screen.bye()
@@ -53,8 +52,13 @@ class Game:
         player_bbox = self._player.get_bounding_box()
         if self.car_manager.check_crashes(player_bbox):
             self._is_running = False
+            self._scoreboard.game_over()
+            self._scoreboard.show_input_message()
             return
-        self._player.finished()
+        if self._player.finished():
+            self.car_manager.increment_car_velocities()
+            self._scoreboard.player_finished()
+            self._scoreboard.update_score()
         self.car_manager.check_cars_finished()
 
     def _toggle_pause(self) -> None:
@@ -72,6 +76,9 @@ class Game:
         self._is_paused = False
         self._player.move_to_start()
         self.car_manager.reposition_all_cars()
+        self.car_manager.restart_car_velocities()
+        self._scoreboard.restart_player_score()
+        self._scoreboard.update_score()
 
     def _move_player(self) -> None:
         if not self._is_running:
