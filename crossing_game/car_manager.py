@@ -32,12 +32,19 @@ class CarManager:
             car.move()        
 
     def check_crashes(self, player_bbox: BoundingBox) -> bool:
+        def check_x_collision():
+            return (player_bbox.x_max >= car_bbox.x_min and\
+                    player_bbox.x_max <= car_bbox.x_max) or\
+                    (player_bbox.x_min >= car_bbox.x_min and\
+                    player_bbox.x_min <= car_bbox.x_max)
+        def check_y_collision():
+            return (player_bbox.y_max > car_bbox.y_min and\
+                    player_bbox.y_max <= car_bbox.y_max) or\
+                    (player_bbox.y_min >= car_bbox.y_min and\
+                    player_bbox.y_min < car_bbox.y_max)
         for car in self._cars:
             car_bbox = car.get_bounding_box()
-            if  (player_bbox.x_max >= car_bbox.x_min and\
-                player_bbox.x_min <= car_bbox.x_max) and\
-                (player_bbox.y_max >= car_bbox.y_min and\
-                player_bbox.y_min <= car_bbox.y_max):
+            if check_x_collision() and check_y_collision():
                 return True
         return False
     
