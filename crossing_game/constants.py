@@ -1,4 +1,5 @@
 from enum import Enum
+from dataclasses import dataclass
 
 FONT = ("Courier", 24, "normal")
 
@@ -17,3 +18,10 @@ class Color(Enum):
     PURPLE = "purple"
 
 MINIMUM_SIZE_PIX = 20
+
+@dataclass
+class BoundingBox:
+    x_min: float
+    y_min: float
+    x_max: float
+    y_max: float

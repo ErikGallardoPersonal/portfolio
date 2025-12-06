@@ -40,7 +40,12 @@ class Game:
         self._window._screen.update()
 
     def _update(self) -> None:
-        ...
+        self.car_manager.move_cars()
+        player_bbox = self._player.get_bounding_box()
+        if self.car_manager.check_crashes(player_bbox):
+            print("End")
+        self._player.finished()
+        self.car_manager.check_car_finished()
 
     def toggle_pause(self) -> None:
         self._is_paused = not self._is_paused
