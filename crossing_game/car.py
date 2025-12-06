@@ -5,21 +5,26 @@ class Car(GameObject):
     car_velocity: int = 5
     MOVE_INCREMENT: int = 10
 
-    def __init__(self, x_pos: float, y_pos: float) -> None:
+    def __init__(self) -> None:
         super().__init__(Shape.SQUARE, Color.WHITE)
         self.height = 1
         self.width = 2
         self.shapesize(self.height, self.width)
-        self._init_x_pos = x_pos
-        self._init_y_pos = y_pos
-        self.start_car()
+        self._init_x_pos: float
+        self._init_y_pos: float
 
     def start_car(self) -> None:
         self._start_object()
 
+    def reposition(self, column: float, lane: float) -> None:
+        self.goto(column, lane)
+
     def move(self) -> None:
         x, y = self.pos()
         self.goto(x-self.car_velocity, y)
+
+    def has_finished(self, finish_line: float) -> bool:
+        return self.get_bounding_box().x_max <= finish_line
     
     def change_color(self, color: Color) -> None:
         self.color(color.value)

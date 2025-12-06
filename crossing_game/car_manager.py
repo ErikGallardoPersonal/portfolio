@@ -12,6 +12,7 @@ class CarManager:
         self._step_col: float
         self._lane_heigth: float
         self._finish_line: float
+        self._create_all_cars()
 
     def set_street(self, screen_width: float, screen_heigth: float, lane_heigth: float, step_col: float = 5.0):
         self._step_col = step_col
@@ -20,11 +21,10 @@ class CarManager:
         self._lanes = int(screen_heigth / lane_heigth)
         self._finish_line = -screen_width // 2
 
-    def create_all_cars(self):
+    def _create_all_cars(self):
         for _ in range(self._number_of_cars):
-            column, lane = self._get_random_car_coor()
-            car = Car(column, lane)
-            self._change_car_color(car)
+            car = Car()
+            car.color(self._get_random_color(self._cache_colors).value)
             self._cars.append(car)
 
     def move_cars(self) -> None:
@@ -48,17 +48,17 @@ class CarManager:
                 return True
         return False
     
-    def check_car_finished(self) -> None:
+    def check_cars_finished(self) -> None:
         for car in self._cars:
-            car_bbox = car.get_bounding_box()
-            is_finished = car_bbox.x_max <= self._finish_line
-            if not is_finished:
+            if not car.has_finished(self._finish_line):
                 continue
             _, lane = self._get_random_car_coor()
-            car.goto(self._finish_line * -1, lane)
-    
-    def _change_car_color(self, car: Car) -> None:
-        car.color(self._get_random_color(self._cache_colors).value)
+            car.reposition(self._finish_line * -1, lane)
+
+    def reposition_all_cars(self) -> None:
+        for car in self._cars:
+            column, lane = self._get_random_car_coor()
+            car.reposition(column, lane)
 
     def _get_random_car_coor(self) -> tuple[float, float]:
         screen_columns = self._columns // 2
@@ -79,7 +79,4 @@ class CarManager:
     @staticmethod
     def _get_colors_list() -> list[Color]:
         return [color for color in Color if color != Color.WHITE and color != Color.BLACK]
-
-
-
     
