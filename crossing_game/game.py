@@ -10,8 +10,10 @@ class Game:
         self._window = Window()
         self._screen_width, self._screen_height = self._window.screensize()
         self._scoreboard = Scoreboard(self._screen_height // 2 - 50, 100)
-        self._player = Player()
+        self._player = Player(self._screen_height)
         self.car_manager = CarManager()
+        self.car_manager.set_street(self._screen_width, self._screen_height, self._player.minimum_size)
+        self.car_manager.create_all_cars()
         self._bind_keys()
         self._is_running: bool = True
         self.update_interval: float = 1 / 60
